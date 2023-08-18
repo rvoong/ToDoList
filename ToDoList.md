@@ -89,7 +89,8 @@ POST to `http://localhost:5000/todos` then write a `raw` `json` in the body
 
 12. Inserting and working with SQL commands
 
-```todolist=# INSERT into todo(description) VALUES ('hello');
+```
+todolist=# INSERT into todo(description) VALUES ('hello');
 INSERT 0 1
 todolist=# \dt
 List of relations
@@ -106,7 +107,8 @@ todo_id | description
 3 | hello
 (3 rows)
 
-todolist=#```
+todolist=#
+```
 
 13. Create a todo
 
@@ -135,7 +137,7 @@ Todo
          }
       })```
 
-1.  GET query with index.js
+14.  GET query with index.js
 
 GET
 
@@ -195,31 +197,6 @@ DELETE
 
 19. Clean up the App.js file
 
-```import React, {Fragment} from 'react';
-import './App.css';
-
-function App() {
-return (
-<Fragment></Fragment>
-);
-}
-
-export default App;```
-
-20. Clean up the index.js file
-
-```import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-<React.StrictMode>
-<App />
-</React.StrictMode>
-);
-```
 21. Create components folder
     Create EditTodos.js, InputTodos.js and ListTodos.js
 
@@ -229,327 +206,18 @@ root.render(
 
 23. Building the input todo component
 
-import React from 'react';
-
-const InputTodo = () =>{
-return <h1> Input Todo </h1>;
-}
-
-export default InputTodo;
-
 24. Add to App.js
-
-```//Components
-import InputTodo from './components/InputTodos';
-
-function App() {
-return (
-<Fragment>
-<InputTodo />
-</Fragment>
-);
-}
-
-export default App;```
 
 25. InputTodos
     Changes before React-ifying
 
-```import React, {Fragment} from 'react';
-
-const InputTodo = () =>{
-return (
-<Fragment>
-<h1 className='text-center mt-5'> Input Todo List </h1>
-<form className='d-flex mt-5'>
-<input text='text' className='form-control'/>
-<button className='btn btn-success '> Add </button>
-</form>
-</Fragment>
-)};
-
-export default InputTodo;```
-
 26. Setting up react such that values can change
-
-```import React, {Fragment, useState} from 'react';
-
-const InputTodo = () =>{
-// description is the state
-// set description is the only way to change the state
-// For example if the client puts "Hello" it will show up in react website bar
-const [description, setDescription] = useState("");
-
-      const onSubmitForm = async (event) => {
-         event.preventDefault();
-         try{
-               const body = {description};
-               // By default fetch makes a GET request
-               const response = await fetch('http://localhost:5000/todos', {
-                  method: 'POST',
-                  headers: {'Content-type': 'application/json' },
-                  body: JSON.stringify(body)
-               });
-
-               window.location = "/"
-         }
-         catch (err){
-
-               console.err(err.message);
-         }
-      }
-
-      //e.target.value targets whatever is in the input and grabs the value
-      return (
-      <Fragment>
-         <h1 className='text-center mt-5'> Input Todo List </h1>
-         <form className='d-flex mt-5' onSubmit={onSubmitForm}>
-               <input
-                  text='text'
-                  className='form-control'
-                  value={description}
-                  onChange={event => setDescription(event.target.value)}
-               />
-               <button className='btn btn-success '> Add </button>
-         </form>
-      </Fragment>
-
-)};
-
-export default InputTodo;```
 
 27. Working on the List Todo
 
-Prior to mapping
-
-```import React, { Fragment ,useEffect, useState} from 'react';
-
-const ListTodos = () => {
-// creates a json state that we can edit
-const[todos, setTodos] = useState([]);
-
-      const getTodos = async () => {
-         try{
-               // fetches request to GET the json data.
-               const response = await fetch("http://localhost:5000/todos")
-               // Stores the json data
-               const jsonData = await response.json();
-               setTodos(jsonData);
-         }
-         catch(err){
-               console.error(err.message);
-         }
-      }
-      //[] makes it such that there will be only one request
-      useEffect(() => {
-         getTodos();
-      },[]);
-
-      //console.log(todos);
-
-      return <Fragment>
-         <table className='table mt-5 text-center'>
-               <thead>
-                  <tr>
-                     <th>Description</th>
-                     <th>Edit</th>
-                     <th>Delete</th>
-                  </tr>
-               </thead>
-
-               {/* <td>John</td>
-                  <td>Doe</td>
-                  <td>john@example.com</td> */}
-         </table>
-      </Fragment>;
-
-};```
-
-export default ListTodos;
-
 28. Mapping in ListTodos
 
-Backticks allow for inline parsing in javascript ``
-
-```import React, { Fragment ,useEffect, useState} from 'react';
-
-const ListTodos = () => {
-// creates a json state that we can edit
-const[todos, setTodos] = useState([]);
-
-      // Go to todo and delete the id that is specified
-      const deleteTodo = async (id) => {
-         try{
-               const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`, {
-                  method: "DELETE"
-               });
-               //only returns the todo if it satifies the condition
-               //if the todo.todo_id is not equal to the id that is specified in the argument then it will return it.
-               //Basically it spits out everything that is NOT clicked by the button.
-               setTodos(todos.filter(todo => todo.todo_id !== id));
-         }
-         catch(err){
-               console.log(err.message);
-         }
-      }
-
-      const getTodos = async () => {
-         try{
-               // fetches request to GET the json data.
-               const response = await fetch("http://localhost:5000/todos")
-               // Stores the json data
-               const jsonData = await response.json();
-               setTodos(jsonData);
-         }
-         catch(err){
-               console.error(err.message);
-         }
-      }
-      //[] makes it such that there will be only one request
-      useEffect(() => {
-         getTodos();
-      },[]);
-
-      //console.log(todos);
-
-      return <Fragment>
-         <table className='table mt-5 text-center'>
-               <thead>
-                  <tr>
-                     <th>Description</th>
-                     <th>Edit</th>
-                     <th>Delete</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {/* <td>John</td>
-                     <td>Doe</td>
-                     <td>john@example.com</td> */}
-                  {todos.map(todo => (
-                     <tr key = {todo.todo_id} >
-                           <td>{todo.description}</td>
-                           <td> Edit </td>
-                           <td>
-                              <button
-                              className='btn btn-danger'
-                              onClick={() => deleteTodo(todo.todo_id)}
-                              >
-                                 Delete
-                              </button>
-                           </td>
-                     </tr>
-                  ))}
-
-               </tbody>
-         </table>
-      </Fragment>;
-
-};
-
-export default ListTodos;```
-
 29. Creating the Edit Todo
-```
-import React, { Fragment, useState } from "react";
-
-//Todo is a prop
-const EditTodo = ({ todo }) => {
-// description because we want to edit hte information so we need to know what is already there
-const [description, setDescription] = useState(todo.description);
-
-//edit description: Error function with async
-const updateDescription = async (e) => {
-e.preventDefault();
-/_ Any time we are adding data we need to package it up _/
-try {
-const body = { description };
-const response = await fetch(
-`http://localhost:5000/todos/${todo.todo_id}`,
-{
-method: "PUT",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify(body),
-}
-);
-//alternative window.location.reload()
-window.location = "/";
-} catch (err) {
-console.error(err.message);
-}
-};
-
-return (
-<Fragment>
-{/_ Modals work by targetting a specific ID (in this case #myModal) _/}
-{/_ Button to Open the Modal _/}
-<button
-type="button"
-className="btn btn-warning"
-data-bs-toggle="modal"
-data-bs-target={`#id${todo.todo_id}`}
-//Accounts for clicking outside after changing the description, but you don't want to edit
-onClick={() => setDescription(todo.description)} >
-Edit
-</button>
-
-         {/* <!-- The Modal --> */}
-         {/* Change the modal id with `template strings` */}
-         {/* Example of tempplate string: id = id10 */}
-         <div className="modal" id={`id${todo.todo_id}`}>
-         <div className="modal-dialog">
-            <div className="modal-content">
-               {/* <!-- Modal Header --> */}
-               <div className="modal-header">
-               <h4 className="modal-title">Edit Todo</h4>
-               <button
-                  type="button"
-                  className="btn-close"
-                  data-bs-dismiss="modal"
-                  //changes the edit so it resets afte exiting out
-                  onClick={() => setDescription(todo.description)}
-               ></button>
-               </div>
-
-               {/* <!-- Modal body --> */}
-               <div className="modal-body">
-               {/* Add in form-control */}
-               <input
-                  type="text"
-                  className="form-control"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-               />
-               </div>
-
-               {/* <!-- Modal footer --> */}
-               <div className="modal-footer">
-               {/* add in an edit button */}
-               <button
-                  type="button"
-                  className="btn btn-warning"
-                  data-bs-dismiss="modal"
-                  onClick={(e) => updateDescription(e)}
-               >
-                  Edit
-               </button>
-               <button
-                  type="button"
-                  className="btn btn-danger"
-                  data-bs-dismiss="modal"
-                  onClick={() => setDescription(todo.description)}
-               >
-                  Close
-               </button>
-               </div>
-            </div>
-         </div>
-         </div>
-      </Fragment>
-
-);
-};
-
-export default EditTodo;```
 
 # LEARNING
 
