@@ -26,21 +26,18 @@
 
 CRUD operations only occur within our database
 
-Instructions:
+Steps:
 
 1. `mkdir server` -> `cd server` -> `npm init` (defaults hit enter the whole way)
-2. npm i express pg cors
+2. `npm i express pg cors`
 
-   1. express allows quickly create server in nodejs
-   2. cros allows different domain applications to interact with each other
-      1. React runs on localhost 3000
-      2. Server on localhost 5000
-      3. pg connects the database with the server
+* express allows quickly create server in nodejs
+* cors allows different domain applications to interact with each other
+* React runs on localhost 3000
+* Server on localhost 5000
+* pg connects the database with the server
 
 3. touch index.js
-
-   1. See code with comments
-   2. Create the app initially
 
 4. Package: `nodemon` for constant feedback
    1. nodemon is a tool that helps develop Node.js based applications by automatically restarting the node application when file changes in the directory are detected. nodemon does not require any additional changes to your code or method of development. nodemon is a replacement wrapper for node. To use nodemon, replace the word node on the command line when executing your script.
@@ -48,21 +45,19 @@ Instructions:
 
 Nodemon installation:
 
-    npm install -g nodemon # or using yarn: yarn global add nodemon
+`npm install -g nodemon # or using yarn: yarn global add nodemon`
 
-5. Create middleware??
+5. Create middleware
 
 6. Get data from the REQUEST body with use function
 
 7. Create database.sql in directory
-   **Database Structure**
-   <img src="structure.jpeg" alt="">
 
 Create a Schema because we want the data to be structured
 
 8. Use terminal to start up the PostGRES
 
-   psql -U postgres
+`psql -U postgres`
 
 Ensure that the path is configured for psql to work
 
@@ -84,9 +79,9 @@ Require the database in index.js with
 `const pool = require("./db");`
 
 11. Create routes
-1. add in a try catch block
-1. Use postman to test the API
-1. Run nodemon with nodemon index
+* add in a try catch block
+* Use postman to test the API
+* Run nodemon with nodemon index
 
 11a. Using POSTMAN
 Create a new collection and make a request
@@ -94,7 +89,7 @@ POST to `http://localhost:5000/todos` then write a `raw` `json` in the body
 
 12. Inserting and working with SQL commands
 
-todolist=# INSERT into todo(description) VALUES ('hello');
+```todolist=# INSERT into todo(description) VALUES ('hello');
 INSERT 0 1
 todolist=# \dt
 List of relations
@@ -111,13 +106,13 @@ todo_id | description
 3 | hello
 (3 rows)
 
-todolist=#
+todolist=#```
 
 13. Create a todo
 
 Todo
 
-      // Create a todo
+```      // Create a todo
       // post adds data. Named it todos
       //(req, res) represents REQUEST on the client side and response from the server
       // async simply waits for the function to finish before it continues
@@ -138,13 +133,13 @@ Todo
          } catch (err){
             console.error(err.message);
          }
-      })
+      })```
 
 1.  GET query with index.js
 
 GET
 
-      app.get("/todos/:id", async(req, res) => {
+```      app.get("/todos/:id", async(req, res) => {
          try{
             const{ id } = req.params;
             const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1",[id])
@@ -154,12 +149,12 @@ GET
             console.error(err.message);
          }
       })
-
+```
 15. Update (PUT) a todo
 
 UPDATE
 
-      app.put("/todos/:id", async (req, res) => {
+```      app.put("/todos/:id", async (req, res) => {
          try{
             const { id } = req.params;
             const{ description } = req.body;
@@ -171,13 +166,13 @@ UPDATE
          catch (err){
             console.log(err.message);
          }
-      })
+      })```
 
 16. DELETE
 
 DELETE
 
-      app.delete("/todos/:id", async(req, res) => {
+```      app.delete("/todos/:id", async(req, res) => {
          try{
             const{ id } = req.params;
             const deleteTodo = await pool.query
@@ -188,7 +183,7 @@ DELETE
          catch(err){
             console.log(err.message);
          }
-      })
+      })```
 
 17. SQL queries can be inputted directly into the terminal
 
@@ -200,7 +195,7 @@ DELETE
 
 19. Clean up the App.js file
 
-import React, {Fragment} from 'react';
+```import React, {Fragment} from 'react';
 import './App.css';
 
 function App() {
@@ -209,11 +204,11 @@ return (
 );
 }
 
-export default App;
+export default App;```
 
 20. Clean up the index.js file
 
-import React from 'react';
+```import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -224,7 +219,7 @@ root.render(
 <App />
 </React.StrictMode>
 );
-
+```
 21. Create components folder
     Create EditTodos.js, InputTodos.js and ListTodos.js
 
@@ -244,7 +239,7 @@ export default InputTodo;
 
 24. Add to App.js
 
-//Components
+```//Components
 import InputTodo from './components/InputTodos';
 
 function App() {
@@ -255,12 +250,12 @@ return (
 );
 }
 
-export default App;
+export default App;```
 
 25. InputTodos
     Changes before React-ifying
 
-import React, {Fragment} from 'react';
+```import React, {Fragment} from 'react';
 
 const InputTodo = () =>{
 return (
@@ -273,11 +268,11 @@ return (
 </Fragment>
 )};
 
-export default InputTodo;
+export default InputTodo;```
 
 26. Setting up react such that values can change
 
-import React, {Fragment, useState} from 'react';
+```import React, {Fragment, useState} from 'react';
 
 const InputTodo = () =>{
 // description is the state
@@ -321,13 +316,13 @@ const [description, setDescription] = useState("");
 
 )};
 
-export default InputTodo;
+export default InputTodo;```
 
 27. Working on the List Todo
 
 Prior to mapping
 
-import React, { Fragment ,useEffect, useState} from 'react';
+```import React, { Fragment ,useEffect, useState} from 'react';
 
 const ListTodos = () => {
 // creates a json state that we can edit
@@ -368,7 +363,7 @@ const[todos, setTodos] = useState([]);
          </table>
       </Fragment>;
 
-};
+};```
 
 export default ListTodos;
 
@@ -376,7 +371,7 @@ export default ListTodos;
 
 Backticks allow for inline parsing in javascript ``
 
-import React, { Fragment ,useEffect, useState} from 'react';
+```import React, { Fragment ,useEffect, useState} from 'react';
 
 const ListTodos = () => {
 // creates a json state that we can edit
@@ -451,10 +446,10 @@ const[todos, setTodos] = useState([]);
 
 };
 
-export default ListTodos;
+export default ListTodos;```
 
 29. Creating the Edit Todo
-
+```
 import React, { Fragment, useState } from "react";
 
 //Todo is a prop
@@ -554,7 +549,7 @@ Edit
 );
 };
 
-export default EditTodo;
+export default EditTodo;```
 
 # LEARNING
 
