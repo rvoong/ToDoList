@@ -168,7 +168,8 @@ UPDATE
          catch (err){
             console.log(err.message);
          }
-      })```
+      })
+```
 
 16. DELETE
 
@@ -185,7 +186,8 @@ DELETE
          catch(err){
             console.log(err.message);
          }
-      })```
+      })
+```
 
 17. SQL queries can be inputted directly into the terminal
 
